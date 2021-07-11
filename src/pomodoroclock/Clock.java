@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.TimerTask;
-import javax.swing.Timer;
+import java.util.Timer;
 
 /**
  *
@@ -26,6 +26,10 @@ public class Clock extends javax.swing.JFrame {
     int auxMinutosPausa;
     int auxSegundosPausa;
     int qtdPausa = 1;
+    boolean stop = false;
+    boolean reset = false;
+
+    
 
     public Clock() {
         initComponents();
@@ -47,7 +51,6 @@ public class Clock extends javax.swing.JFrame {
         labelMinutos = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         labelSegundos = new javax.swing.JLabel();
-        jProgressBar1 = new javax.swing.JProgressBar();
         botaoStop = new javax.swing.JButton();
         botaoReset = new javax.swing.JButton();
         botaoStart = new javax.swing.JButton();
@@ -92,7 +95,7 @@ public class Clock extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelSegundos, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -105,8 +108,6 @@ public class Clock extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jProgressBar1.setForeground(new java.awt.Color(51, 204, 0));
-
         botaoStop.setBackground(new java.awt.Color(204, 0, 0));
         botaoStop.setFont(new java.awt.Font("Corbel", 1, 20)); // NOI18N
         botaoStop.setForeground(new java.awt.Color(255, 255, 255));
@@ -117,6 +118,11 @@ public class Clock extends javax.swing.JFrame {
         botaoStop.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 botaoStopMouseClicked(evt);
+            }
+        });
+        botaoStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoStopActionPerformed(evt);
             }
         });
 
@@ -236,11 +242,9 @@ public class Clock extends javax.swing.JFrame {
                             .addComponent(boxPersonalizado)
                             .addComponent(boxPadrao))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)))
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(textSession))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(textSession, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(26, 26, 26))
         );
         jPanel2Layout.setVerticalGroup(
@@ -249,37 +253,34 @@ public class Clock extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addComponent(boxPadrao)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(boxPersonalizado)
-                    .addComponent(textSession))
+                .addComponent(boxPersonalizado)
                 .addGap(10, 10, 10)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(botaoStart)
-                                .addGap(20, 20, 20)
-                                .addComponent(botaoStop)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(botaoReset)
-                            .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(textMinutosTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)
-                            .addComponent(textSegundosTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(botaoStart)
                         .addGap(18, 18, 18)
-                        .addComponent(jLabel3)
-                        .addGap(4, 4, 4)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(textMinutosPausa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)
-                            .addComponent(textSegundosPausa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(21, Short.MAX_VALUE))
+                        .addComponent(botaoStop))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(textSession, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel4)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(textMinutosTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel2)
+                                .addComponent(textSegundosTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(18, 18, 18)
+                            .addComponent(jLabel3)
+                            .addGap(2, 2, 2)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(textMinutosPausa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5)
+                                .addComponent(textSegundosPausa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(botaoReset)))))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -312,108 +313,27 @@ public class Clock extends javax.swing.JFrame {
 
     private void botaoStartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botaoStartMouseClicked
         // TEMPO PADRÃO
-        if (boxPadrao.isSelected()) {
-            pausa = false;
-            auxMinutosTrabalho = 0;
-            auxSegundosTrabalho = 5;
-            if (qtdPausa == 4) {
-                auxMinutosPausa = 10;
-                auxSegundosPausa = 0;
-            } else {
-                auxMinutosPausa = 0;
-                auxSegundosPausa = 2;
-            }
-            java.util.Timer timer = new java.util.Timer(); //new timer
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                    textSession.setText("Working Session!");
-                    textSession.setForeground(Color.red);
-                    labelSegundos.setText(Integer.toString(auxSegundosTrabalho));
-                    labelMinutos.setText(Integer.toString(auxMinutosTrabalho));
-                    auxSegundosTrabalho--;
-                    if (auxSegundosTrabalho == -1) {
-                        auxSegundosTrabalho = 59;
-                        if ((auxMinutosTrabalho - 1) != -1) {
-                            auxMinutosTrabalho--;
-                        } else {
-                            pausa = true;
-                            qtdPausa++;
-                        }
-                    }
-                    if (pausa) {
-                        System.out.println(qtdPausa);
-                        textSession.setText("Break Session!");
-                        if(qtdPausa == 5)
-                            textSession.setText("Long break Session!");
-                        textSession.setForeground(Color.green);
-                        labelSegundos.setText(Integer.toString(auxSegundosPausa));
-                        labelMinutos.setText(Integer.toString(auxMinutosPausa));
-                        auxSegundosPausa--;
-                        if (auxSegundosPausa == -1) {
-                            auxSegundosPausa = 59;
-                            if ((auxMinutosPausa - 1) != -1) {
-                                auxMinutosPausa--;
-                            } else {
-                                timer.cancel();
-                            }
-                        }
-                    }
-                }
-            };
-            timer.scheduleAtFixedRate(task, 0, 1000); // =  timer.schedule(task, delay, period);
-        } // TEMPO PERSONALIZADO
-        else if (boxPersonalizado.isSelected()) {
-            pausa = false;
-            auxMinutosTrabalho = Integer.parseInt(textMinutosTrabalho.getText());
-            auxSegundosTrabalho = Integer.parseInt(textSegundosTrabalho.getText());
-            auxMinutosPausa = Integer.parseInt(textMinutosPausa.getText());
-            auxSegundosPausa = Integer.parseInt(textSegundosPausa.getText());
-            java.util.Timer timer = new java.util.Timer(); //new timer
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                    textSession.setText("Working Session!");
-                    textSession.setForeground(Color.red);
-                    labelSegundos.setText(Integer.toString(auxSegundosTrabalho));
-                    labelMinutos.setText(Integer.toString(auxMinutosTrabalho));
-                    auxSegundosTrabalho--;
-                    if (auxSegundosTrabalho == -1) {
-                        auxSegundosTrabalho = 59;
-                        if ((auxMinutosTrabalho - 1) != -1) {
-                            auxMinutosTrabalho--;
-                        } else {
-                            pausa = true;
-                        }
-                    }
-                    if (pausa) {
-                        textSession.setText("Break Session!");
-                        textSession.setForeground(Color.green);
-                        labelSegundos.setText(Integer.toString(auxSegundosPausa));
-                        labelMinutos.setText(Integer.toString(auxMinutosPausa));
-                        auxSegundosPausa--;
-                        if (auxSegundosPausa == -1) {
-                            auxSegundosPausa = 59;
-                            if ((auxMinutosPausa - 1) != -1) {
-                                auxMinutosPausa--;
-                            } else {
-                                timer.cancel();
-                            }
-                        }
-                    }
-                }
-            };
-            timer.scheduleAtFixedRate(task, 0, 1000); // =  timer.schedule(task, delay, period);
-        }
+        stop = false;
+        funcionamento();
     }//GEN-LAST:event_botaoStartMouseClicked
 
     private void botaoStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botaoStopMouseClicked
         // TODO add your handling code here:
+        stop = true;
+        textSession.setText("");
     }//GEN-LAST:event_botaoStopMouseClicked
 
     private void botaoResetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botaoResetMouseClicked
         // TODO add your handling code here:
+        reset = true;
+        labelMinutos.setText("0");
+        labelSegundos.setText("0");
+        textSession.setText("");
     }//GEN-LAST:event_botaoResetMouseClicked
+
+    private void botaoStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoStopActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botaoStopActionPerformed
 
     /**
      * @param args the command line arguments
@@ -477,6 +397,126 @@ public class Clock extends javax.swing.JFrame {
         }
     }
 
+    public void funcionamento() {
+        // TEMPO PADRÃO
+
+        if (boxPadrao.isSelected()) {
+            pausa = false;
+            auxMinutosTrabalho = 25;
+            auxSegundosTrabalho = 0;
+            if (qtdPausa == 4) {
+                auxMinutosPausa = 10;
+                auxSegundosPausa = 0;
+            } else {
+                auxMinutosPausa = 5;
+                auxSegundosPausa = 0;
+            }
+            Timer timer = new Timer(); //new timer
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    if (stop == false && reset == false) {
+                        textSession.setText("Working session!");
+                        textSession.setForeground(Color.red);
+                        labelSegundos.setText(Integer.toString(auxSegundosTrabalho));
+                        labelMinutos.setText(Integer.toString(auxMinutosTrabalho));
+                        auxSegundosTrabalho--;
+                        if (auxSegundosTrabalho == -1) {
+                            auxSegundosTrabalho = 59;
+                            if ((auxMinutosTrabalho - 1) != -1) {
+                                auxMinutosTrabalho--;
+                            } else {
+                                pausa = true;
+                                qtdPausa++;
+                            }
+                        }
+                        if (pausa) {
+                            textSession.setText("Break session!");
+                            if (qtdPausa == 5) {
+                                textSession.setText("Long break session!");
+                            }
+                            textSession.setForeground(Color.green);
+                            labelSegundos.setText(Integer.toString(auxSegundosPausa));
+                            labelMinutos.setText(Integer.toString(auxMinutosPausa));
+                            auxSegundosPausa--;
+                            if (auxSegundosPausa == -1) {
+                                auxSegundosPausa = 59;
+                                if ((auxMinutosPausa - 1) != -1) {
+                                    auxMinutosPausa--;
+                                } else {
+                                    timer.cancel();
+                                }
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        timer.cancel();
+                        stop = false;
+                        reset = false;
+                    }
+                }
+            };
+            timer.scheduleAtFixedRate(task, 0, 1000);
+
+        } /**
+         * **********************************************************************************************
+         */
+        // TEMPO PERSONALIZADO
+        else if (boxPersonalizado.isSelected()) {
+            pausa = false;
+            auxMinutosTrabalho = Integer.parseInt(textMinutosTrabalho.getText());
+            auxSegundosTrabalho = Integer.parseInt(textSegundosTrabalho.getText());
+            auxMinutosPausa = Integer.parseInt(textMinutosPausa.getText());
+            auxSegundosPausa = Integer.parseInt(textSegundosPausa.getText());
+            Timer timer = new Timer(); //new timer
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    if (stop == false && reset == false) {
+                        textSession.setText("Working Session!");
+                        textSession.setForeground(Color.red);
+                        labelSegundos.setText(Integer.toString(auxSegundosTrabalho));
+                        labelMinutos.setText(Integer.toString(auxMinutosTrabalho));
+                        auxSegundosTrabalho--;
+                        if (auxSegundosTrabalho == -1) {
+                            auxSegundosTrabalho = 59;
+                            if ((auxMinutosTrabalho - 1) != -1) {
+                                auxMinutosTrabalho--;
+                            } else {
+                                pausa = true;
+                            }
+                        }
+                        if (pausa) {
+                            textSession.setText("Break Session!");
+                            textSession.setForeground(Color.green);
+                            labelSegundos.setText(Integer.toString(auxSegundosPausa));
+                            labelMinutos.setText(Integer.toString(auxMinutosPausa));
+                            auxSegundosPausa--;
+                            if (auxSegundosPausa == -1) {
+                                auxSegundosPausa = 59;
+                                if ((auxMinutosPausa - 1) != -1) {
+                                    auxMinutosPausa--;
+                                } else {
+                                    timer.cancel();
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        timer.cancel();
+                        stop = false;
+                        reset = false;
+                    }
+                }
+            };
+            timer.scheduleAtFixedRate(task, 0, 1000);
+        }
+
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botaoReset;
@@ -492,7 +532,6 @@ public class Clock extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JLabel labelMinutos;
     private javax.swing.JLabel labelSegundos;
     private javax.swing.JTextField textMinutosPausa;
