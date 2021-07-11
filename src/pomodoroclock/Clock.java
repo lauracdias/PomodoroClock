@@ -5,9 +5,12 @@
  */
 package pomodoroclock;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.TimerTask;
 import java.util.Timer;
 
@@ -28,8 +31,12 @@ public class Clock extends javax.swing.JFrame {
     int qtdPausa = 1;
     boolean stop = false;
     boolean reset = false;
-
-    
+    boolean pause = false;
+    boolean start = false;
+    int segPauseT;
+    int minPauseT;
+    int segPauseP;
+    int minPauseP;
 
     public Clock() {
         initComponents();
@@ -65,6 +72,7 @@ public class Clock extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         textSegundosPausa = new javax.swing.JTextField();
         textSession = new javax.swing.JLabel();
+        botaoPause = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -208,6 +216,25 @@ public class Clock extends javax.swing.JFrame {
         textSession.setFont(new java.awt.Font("Corbel", 1, 18)); // NOI18N
         textSession.setForeground(new java.awt.Color(153, 0, 0));
 
+        botaoPause.setBackground(new java.awt.Color(102, 0, 102));
+        botaoPause.setFont(new java.awt.Font("Corbel", 1, 20)); // NOI18N
+        botaoPause.setForeground(new java.awt.Color(255, 255, 255));
+        botaoPause.setText("PAUSE");
+        botaoPause.setAlignmentY(0.0F);
+        botaoPause.setBorderPainted(false);
+        botaoPause.setEnabled(false);
+        botaoPause.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        botaoPause.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                botaoPauseMouseClicked(evt);
+            }
+        });
+        botaoPause.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoPauseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -232,10 +259,11 @@ public class Clock extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(textSegundosPausa, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(botaoStart, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botaoStop, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botaoReset, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(botaoStart, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botaoStop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botaoReset, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botaoPause, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(56, 56, 56))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -258,29 +286,34 @@ public class Clock extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(botaoStart)
-                        .addGap(18, 18, 18)
-                        .addComponent(botaoStop))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(textSession, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jLabel4)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(textMinutosTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel2)
-                                .addComponent(textSegundosTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(18, 18, 18)
-                            .addComponent(jLabel3)
-                            .addGap(2, 2, 2)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(textMinutosPausa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5)
-                                .addComponent(textSegundosPausa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(botaoReset)))))
-                .addContainerGap(23, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                        .addComponent(botaoPause)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(botaoStop)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(botaoReset)
+                        .addGap(17, 17, 17))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(textSession, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(textMinutosTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(textSegundosTrabalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel3)
+                                .addGap(4, 4, 4)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(textMinutosPausa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(textSegundosPausa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -314,6 +347,9 @@ public class Clock extends javax.swing.JFrame {
     private void botaoStartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botaoStartMouseClicked
         // TEMPO PADRÃO
         stop = false;
+        start = true;
+        pause = false;
+        botaoPause.setEnabled(true);
         funcionamento();
     }//GEN-LAST:event_botaoStartMouseClicked
 
@@ -334,6 +370,15 @@ public class Clock extends javax.swing.JFrame {
     private void botaoStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoStopActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botaoStopActionPerformed
+
+    private void botaoPauseMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botaoPauseMouseClicked
+        // TODO add your handling code here:
+        pause = true;
+    }//GEN-LAST:event_botaoPauseMouseClicked
+
+    private void botaoPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPauseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botaoPauseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -396,6 +441,13 @@ public class Clock extends javax.swing.JFrame {
             textMinutosPausa.setEditable(false);
         }
     }
+    
+    public void som(String nome)
+    {
+        URL url = getClass().getResource(nome + ".wav");
+        AudioClip audio = Applet.newAudioClip(url);
+        audio.play();        
+    }
 
     public void funcionamento() {
         // TEMPO PADRÃO
@@ -415,7 +467,7 @@ public class Clock extends javax.swing.JFrame {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
-                    if (stop == false && reset == false) {
+                    if (stop == false && reset == false && pause == false) {
                         textSession.setText("Working session!");
                         textSession.setForeground(Color.red);
                         labelSegundos.setText(Integer.toString(auxSegundosTrabalho));
@@ -430,6 +482,7 @@ public class Clock extends javax.swing.JFrame {
                                 qtdPausa++;
                             }
                         }
+
                         if (pausa) {
                             textSession.setText("Break session!");
                             if (qtdPausa == 5) {
@@ -448,10 +501,12 @@ public class Clock extends javax.swing.JFrame {
                                 }
                             }
                         }
+                        if (pause) {
+                            //pausarTimer(auxSegundosTrabalho, auxMinutosTrabalho, auxSegundosPausa, auxMinutosPausa);
+                            timer.cancel();
+                        }
 
-                    }
-                    else
-                    {
+                    } else {
                         timer.cancel();
                         stop = false;
                         reset = false;
@@ -474,7 +529,7 @@ public class Clock extends javax.swing.JFrame {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
-                    if (stop == false && reset == false) {
+                    if (stop == false && reset == false && pause == false) {
                         textSession.setText("Working Session!");
                         textSession.setForeground(Color.red);
                         labelSegundos.setText(Integer.toString(auxSegundosTrabalho));
@@ -488,6 +543,7 @@ public class Clock extends javax.swing.JFrame {
                                 pausa = true;
                             }
                         }
+
                         if (pausa) {
                             textSession.setText("Break Session!");
                             textSession.setForeground(Color.green);
@@ -502,10 +558,12 @@ public class Clock extends javax.swing.JFrame {
                                     timer.cancel();
                                 }
                             }
+                            if (pause) {
+                                //pausarTimer(auxSegundosTrabalho, auxMinutosTrabalho, auxSegundosPausa, auxMinutosPausa);
+                                timer.cancel();
+                            }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         timer.cancel();
                         stop = false;
                         reset = false;
@@ -517,8 +575,64 @@ public class Clock extends javax.swing.JFrame {
 
     }
 
+    /*
+    public void pausarTimer(int seg, int min, int seg2, int min2) {
+        segPauseT = seg;
+        minPauseT = min;
+        segPauseP = seg2;
+        minPauseP = min2;
+        Timer timer = new Timer(); //new timer
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (pause && start) {
+                    if (stop == false && reset == false) {
+                        System.out.println("entrei");
+                        botaoPause.setEnabled(false);
+                        textSession.setText("Working Session!");
+                        textSession.setForeground(Color.red);
+                        labelSegundos.setText(Integer.toString(segPauseT));
+                        labelMinutos.setText(Integer.toString(minPauseT));
+                        segPauseT--;
+                        if (segPauseT == -1) {
+                            segPauseT = 59;
+                            if ((minPauseT - 1) != -1) {
+                                minPauseT--;
+                            } else {
+                                pausa = true;
+                            }
+                        }
+
+                        if (pausa) {
+                            textSession.setText("Break Session!");
+                            textSession.setForeground(Color.green);
+                            labelSegundos.setText(Integer.toString(segPauseP));
+                            labelMinutos.setText(Integer.toString(minPauseP));
+                            segPauseP--;
+                            if (segPauseP == -1) {
+                                segPauseP = 59;
+                                if ((minPauseP - 1) != -1) {
+                                    minPauseP--;
+                                } else {
+                                    timer.cancel();
+                                }
+                            }
+                        }
+                    } else {
+                        timer.cancel();
+                        stop = false;
+                        reset = false;
+                    }
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, 1000);
+
+    }*/
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botaoPause;
     private javax.swing.JButton botaoReset;
     private javax.swing.JButton botaoStart;
     private javax.swing.JButton botaoStop;
