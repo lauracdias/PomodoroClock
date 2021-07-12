@@ -8,23 +8,11 @@ package pomodoroclock;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.TimerTask;
 import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.sound.sampled.spi.AudioFileReader;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -35,23 +23,18 @@ public class Clock extends javax.swing.JFrame {
     /**
      * Creates new form Clock
      */
-    int auxMinutosTrabalho;
-    int auxSegundosTrabalho;
-    boolean pausa = false;
-    int auxMinutosPausa;
-    int auxSegundosPausa;
-    int qtdPausa = 1;
-    boolean stop = false;
-    boolean reset = false;
-    boolean pause = false;
-    boolean start = false;
-    int segPauseT;
-    int minPauseT;
-    int segPauseP;
-    int minPauseP;
-
-    int minP;
-    int secP;
+    int auxMinutosTrabalho; // minutos durante a sessão de trabalho
+    int auxSegundosTrabalho; // segundos durante a sessão de trabalho
+    int minP; // variavel auxiliar p/ quando o botao de pause é acionado
+    int secP; // variavel auxiliar p/ quando o botao de pause é acionado
+    int auxMinutosPausa; // minutos durante a sessão de descanso
+    int auxSegundosPausa; // segundos durante a sessão de descanso
+    int qtdPausa = 1; // conta a quantidade de pausas ( na 4ª o tempo é de 10 min)
+    boolean stop = false; // verifica se o botao de stop foi acionado
+    boolean reset = false; // verifica se o botao de reset foi acionado
+    boolean pause = false; // verifica se o botao de pause foi acionado
+    boolean start = false; // verifica se o botao de start foi acionado
+    boolean pausa = false; // verifica se o tempo de descanso começou
 
     public Clock() {
         initComponents();
@@ -138,11 +121,6 @@ public class Clock extends javax.swing.JFrame {
         botaoStop.setAlignmentY(0.0F);
         botaoStop.setBorderPainted(false);
         botaoStop.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        botaoStop.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                botaoStopMouseClicked(evt);
-            }
-        });
         botaoStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoStopActionPerformed(evt);
@@ -156,11 +134,6 @@ public class Clock extends javax.swing.JFrame {
         botaoReset.setAlignmentY(0.0F);
         botaoReset.setBorderPainted(false);
         botaoReset.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        botaoReset.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                botaoResetMouseClicked(evt);
-            }
-        });
         botaoReset.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoResetActionPerformed(evt);
@@ -174,11 +147,6 @@ public class Clock extends javax.swing.JFrame {
         botaoStart.setAlignmentY(0.0F);
         botaoStart.setBorderPainted(false);
         botaoStart.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        botaoStart.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                botaoStartMouseClicked(evt);
-            }
-        });
         botaoStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoStartActionPerformed(evt);
@@ -244,11 +212,6 @@ public class Clock extends javax.swing.JFrame {
         botaoPause.setBorderPainted(false);
         botaoPause.setEnabled(false);
         botaoPause.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        botaoPause.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                botaoPauseMouseClicked(evt);
-            }
-        });
         botaoPause.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botaoPauseActionPerformed(evt);
@@ -362,38 +325,17 @@ public class Clock extends javax.swing.JFrame {
 
     private void botaoResetActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
-    }                                          
-
-    private void botaoStartMouseClicked(java.awt.event.MouseEvent evt) {                                        
-        // TEMPO PADRÃO
-        stop = false;
-        start = true;
-        botaoPause.setEnabled(true);
-        funcionamento();
-    }                                       
-
-    private void botaoStopMouseClicked(java.awt.event.MouseEvent evt) {                                       
-        // TODO add your handling code here:
-        stop = true;
-        textSession.setText("");
-    }                                      
-
-    private void botaoResetMouseClicked(java.awt.event.MouseEvent evt) {                                        
-        // TODO add your handling code here:
         reset = true;
         labelMinutos.setText("0");
         labelSegundos.setText("0");
         textSession.setText("");
-    }                                       
+    }                                                                                 
 
     private void botaoStopActionPerformed(java.awt.event.ActionEvent evt) {                                          
         // TODO add your handling code here:
+        stop = true;
+        textSession.setText("");
     }                                         
-
-    private void botaoPauseMouseClicked(java.awt.event.MouseEvent evt) {                                        
-        // TODO add your handling code here:
-
-    }                                       
 
     private void botaoPauseActionPerformed(java.awt.event.ActionEvent evt) {                                           
         pause = true;
@@ -404,6 +346,10 @@ public class Clock extends javax.swing.JFrame {
 
     private void botaoStartActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
+        stop = false;
+        start = true;
+        botaoPause.setEnabled(true);
+        funcionamento();
     }                                          
 
     /**
@@ -468,15 +414,6 @@ public class Clock extends javax.swing.JFrame {
         }
     }
 
-    public void som() throws UnsupportedAudioFileException, IOException, LineUnavailableException
-    {
-        File file = new File("som.wav");
-        AudioInputStream as = AudioSystem.getAudioInputStream(file);
-        Clip clip = AudioSystem.getClip();
-        clip.open(as);
-        clip.start();
-    }
-
     public void funcionamento() {
         // TEMPO PADRÃO
         if (!pause) {
@@ -508,15 +445,6 @@ public class Clock extends javax.swing.JFrame {
                                 } else {
                                     pausa = true;
                                     qtdPausa++;
-                                    try {
-                                        som();
-                                    } catch (UnsupportedAudioFileException ex) {
-                                        Logger.getLogger(Clock.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (IOException ex) {
-                                        Logger.getLogger(Clock.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (LineUnavailableException ex) {
-                                        Logger.getLogger(Clock.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
                                 }
                             }
 
@@ -577,15 +505,6 @@ public class Clock extends javax.swing.JFrame {
                                     auxMinutosTrabalho--;
                                 } else {
                                     pausa = true;
-                                    try {
-                                        som();
-                                    } catch (UnsupportedAudioFileException ex) {
-                                        Logger.getLogger(Clock.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (IOException ex) {
-                                        Logger.getLogger(Clock.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (LineUnavailableException ex) {
-                                        Logger.getLogger(Clock.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
                                 }
                             }
 
@@ -668,7 +587,6 @@ public class Clock extends javax.swing.JFrame {
                                 }
                             }
                             if (pause) {
-                                //pausarTimer(auxSegundosTrabalho, auxMinutosTrabalho, auxSegundosPausa, auxMinutosPausa);
                                 timer.cancel();
                             }
 
@@ -722,7 +640,6 @@ public class Clock extends javax.swing.JFrame {
                                     }
                                 }
                                 if (pause) {
-                                    //pausarTimer(auxSegundosTrabalho, auxMinutosTrabalho, auxSegundosPausa, auxMinutosPausa);
                                     timer.cancel();
                                 }
                             }
