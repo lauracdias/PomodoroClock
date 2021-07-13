@@ -18,3 +18,5 @@ A interface possui 4 botões: start, pause, stop e reset
 - Pause: quando selecionado, pausa o temporizador. Com esse botão acionado, ao clicar no botão de start novamente a contagem continua.
 - Stop: para o temporizador. Com esse botão acionado, ao clicar no botão de start novamente a contagem reinicia.
 - Reset: zera o temporizador.
+
+- No repositório há o arquivo PomodoroClock.jar, onde é possível executar a aplicação =D

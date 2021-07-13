@@ -16,6 +16,8 @@ public class PomodoroClock {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Clock ck = new Clock();
+        ck.setVisible(true);
     }
     
 }
