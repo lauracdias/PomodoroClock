@@ -18,8 +18,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
 /**
  *
  * @author laura
@@ -41,7 +39,7 @@ public class Clock extends javax.swing.JFrame {
     boolean pause = false; // verifica se o botao de pause foi acionado
     boolean start = false; // verifica se o botao de start foi acionado
     boolean pausa = false; // verifica se o tempo de descanso começou
-    String musica = "alarme.wav";
+
 
     public Clock() {
         initComponents();
@@ -462,7 +460,7 @@ public class Clock extends javax.swing.JFrame {
                                     pausa = true;
                                     qtdPausa++;
                                     try {
-                                        playSound("alarme.wav");
+                                        playSound("som.wav");
                                     } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
                                         Logger.getLogger(Clock.class.getName()).log(Level.SEVERE, null, ex);
                                     }
@@ -527,7 +525,7 @@ public class Clock extends javax.swing.JFrame {
                                 } else {
                                     pausa = true;
                                     try {
-                                        playSound("alarme.wav");
+                                        playSound("som.wav");
                                     } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
                                         Logger.getLogger(Clock.class.getName()).log(Level.SEVERE, null, ex);
                                     }
@@ -592,7 +590,7 @@ public class Clock extends javax.swing.JFrame {
                                     pausa = true;
                                     qtdPausa++;
                                     try {
-                                        playSound("alarme.wav");
+                                        playSound("som.wav");
                                     } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
                                         Logger.getLogger(Clock.class.getName()).log(Level.SEVERE, null, ex);
                                     }
@@ -653,7 +651,7 @@ public class Clock extends javax.swing.JFrame {
                                 } else {
                                     pausa = true;
                                     try {
-                                        playSound("alarme.wav");
+                                        playSound("som.wav");
                                     } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
                                         Logger.getLogger(Clock.class.getName()).log(Level.SEVERE, null, ex);
                                     }
